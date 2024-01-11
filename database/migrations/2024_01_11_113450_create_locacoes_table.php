@@ -11,9 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('locacaos', function (Blueprint $table) {
+        Schema::create('locacoes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('cliente_id');
+            $table->unsignedBigInteger('carro_id');
+            $table->dateTime('data_inicio_periodo');
+            $table->dateTime('data_final_previsto_periodo');
+            $table->dateTime('data_final_realizado_periodo');
+            $table->float('valor_diaria', 8,2);
+            $table->integer('km_inicial');
+            $table->integer('km_final');
             $table->timestamps();
+
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('carro_id')->references('id')->on('carros');
         });
     }
 
@@ -22,6 +33,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('locacaos');
+        $table->dropForeign('locacoes_cliente_id_foreign');
+        $table->dropForeign('locacoes_carro_id_foreign');
+        $table->drop('cliente_id');
+        $table->drop('carro_id');
+        Schema::dropIfExists('locacoes');
     }
 };
