@@ -8,21 +8,16 @@ use App\Http\Requests\UpdateMarcaRequest;
 
 class MarcaController extends Controller
 {
+    public function __construct(Marca $marca) {
+        $this->marca = $marca;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $marcas = Marca::all();
+        $marcas = $this->marca->all();
         return $marcas;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -30,40 +25,55 @@ class MarcaController extends Controller
      */
     public function store(StoreMarcaRequest $request)
     {
-        $marca = Marca::create($request->all());
+        $marca = $this->marca->create($request->all());
+        if($marca === null){
+            return 404;
+        }
         return $marca;
     }
 
     /**
      * Display the specified resource.
+     * @param Integer
      */
-    public function show(Marca $marca)
+    
+    public function show($id)
     {
+        $marca = $this->marca->find($id);
+        if($marca === null){
+            return 404;
+        }
         return $marca;
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Marca $marca)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
+     * @param Integer
      */
-    public function update(UpdateMarcaRequest $request, Marca $marca)
+    public function update(UpdateMarcaRequest $request, $id)
     {
+        $marca = $this->marca->find($id);
+        if($marca === null){
+            return 404;
+        }
         $marca->update($request->all());
         return $marca;
     }
 
     /**
      * Remove the specified resource from storage.
+     * @param Integer
      */
-    public function destroy(Marca $marca)
+    public function destroy($id)
     {
-        //
+        $marca = $this->marca->find($id);
+        if($marca === null){
+            return 404;
+        }
+        $marca->delete();
+        return [
+            'marca' => $marca,
+            'mensagem' => 'Marca excluída com sucesso.'
+        ];
     }
 }
