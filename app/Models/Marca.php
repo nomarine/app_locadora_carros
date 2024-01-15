@@ -14,7 +14,7 @@ class Marca extends Model
     public function regras() {
         return [
             'nome' => 'required|unique:marcas,nome,'.$this->id.'|min:3',
-            'imagem' => 'required'
+            'imagem' => 'required|file|mimes:png,jpeg'
         ];
     }
 
@@ -22,7 +22,8 @@ class Marca extends Model
         return [
             'required' => 'O campo :attribute não foi informado.',
             'unique' => 'O valor do campo :attribute já existe.',
-            'min' => 'O campo :attribute deve ter pelo menos :min caracteres.'
+            'min' => 'O campo :attribute deve ter pelo menos :min caracteres.',
+            'mimes' => 'A imagem deve ser de um dos seguintes formatos: :values.'
         ];
     }
 }
