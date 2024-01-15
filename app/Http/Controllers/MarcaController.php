@@ -25,10 +25,17 @@ class MarcaController extends Controller
      */
     public function store(StoreMarcaRequest $request)
     {
+        $regras = [
+            'nome' => 'required|unique:marcas',
+            'imagem' => 'required'
+        ];
+        $feedback = [
+            'required' => 'O campo :attribute não foi informado.',
+            'unique' => 'O valor do campo :attribute já existe.',
+        ];
+        $request->validate($regras, $feedback);
+
         $marca = $this->marca->create($request->all());
-        if($marca === null){
-            return 404;
-        }
         return $marca;
     }
 
@@ -41,7 +48,7 @@ class MarcaController extends Controller
     {
         $marca = $this->marca->find($id);
         if($marca === null){
-            return 404;
+            return response('Recurso não encontrado.', 404);
         }
         return $marca;
     }
@@ -54,7 +61,7 @@ class MarcaController extends Controller
     {
         $marca = $this->marca->find($id);
         if($marca === null){
-            return 404;
+            return response('Recurso não encontrado.', 404);
         }
         $marca->update($request->all());
         return $marca;
@@ -68,7 +75,7 @@ class MarcaController extends Controller
     {
         $marca = $this->marca->find($id);
         if($marca === null){
-            return 404;
+            return response('Recurso não encontrado.', 404);
         }
         $marca->delete();
         return [
