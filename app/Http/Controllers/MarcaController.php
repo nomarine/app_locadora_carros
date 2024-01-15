@@ -55,8 +55,20 @@ class MarcaController extends Controller
         if($marca === null){
             return response('Recurso não encontrado.', 404);
         }
-        $request->validate($marca->regras(), $marca->feedback());
-        
+
+        if($request->method() === 'PATCH'){
+            $regrasDinamicas = array();
+
+            foreach($marca->regras() as $input => $regra){
+                if(array_key_exists($input, $request->all())){
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+            $request->validate($regrasDinamicas, $marca->feedback());;
+        } else {
+            $request->validate($marca->regras(), $marca->feedback());
+        }
+
         $marca->update($request->all());
         return $marca;
     }
