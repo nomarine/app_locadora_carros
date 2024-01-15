@@ -55,6 +55,8 @@ class MarcaController extends Controller
         if($marca === null){
             return response('Recurso não encontrado.', 404);
         }
+        $request->validate($marca->regras(), $marca->feedback());
+        
         $marca->update($request->all());
         return $marca;
     }
