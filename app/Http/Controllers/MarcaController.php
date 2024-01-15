@@ -27,6 +27,9 @@ class MarcaController extends Controller
     {
         $request->validate($this->marca->regras(), $this->marca->feedback());
 
+        $request->imagem->store('imagens', 'public');
+        dd('Upload de imagens');
+
         $marca = $this->marca->create($request->all());
         return $marca;
     }
