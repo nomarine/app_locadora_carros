@@ -69,12 +69,19 @@ class MarcaController extends Controller
                     $regrasDinamicas[$input] = $regra;
                 }
             }
-            $request->validate($regrasDinamicas, $marca->feedback());;
+            if(empty($regrasDinamicas)){
+                return response('Nenhum campo informado.', 400);
+            }
+            
+            $request->validate($regrasDinamicas, $marca->feedback());
         } else {
             $request->validate($marca->regras(), $marca->feedback());
         }
-
-        $marca->update($request->all());
+        
+        $marca->imagem = $marca->imagem ?? $request->imagem->store('imagens', 'public');
+        $marca->nome = $marca->nome ?? $request->nome;
+        
+        $marca->save();
         return $marca;
     }
 
