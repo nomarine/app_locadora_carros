@@ -6,6 +6,8 @@ use App\Models\Marca;
 use App\Http\Requests\StoreMarcaRequest;
 use App\Http\Requests\UpdateMarcaRequest;
 
+use Illuminate\Support\Facades\Storage;
+
 class MarcaController extends Controller
 {
     public function __construct(Marca $marca) {
@@ -72,14 +74,19 @@ class MarcaController extends Controller
             if(empty($regrasDinamicas)){
                 return response('Nenhum campo informado.', 400);
             }
-            
+
             $request->validate($regrasDinamicas, $marca->feedback());
         } else {
             $request->validate($marca->regras(), $marca->feedback());
         }
         
-        $marca->imagem = $marca->imagem ?? $request->imagem->store('imagens', 'public');
-        $marca->nome = $marca->nome ?? $request->nome;
+        if($request->imagem){
+            Storage::disk('public')->delete($marca->imagem);
+            $urn_imagem = $request->imagem->store('imagens', 'public');
+        }
+
+        $marca->imagem = $urn_imagem ?? $marca->imagem;
+        $marca->nome = $request->nome ?? $marca->nome;
         
         $marca->save();
         return $marca;
@@ -95,6 +102,7 @@ class MarcaController extends Controller
         if($marca === null){
             return response('Recurso não encontrado.', 404);
         }
+        Storage::disk('public')->delete($marca->imagem);
         $marca->delete();
         return [
             'marca' => $marca,
