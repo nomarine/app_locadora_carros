@@ -26,8 +26,11 @@ class MarcaController extends Controller
         }
 
         if($request->has('filtros')){
-            $parametros = explode(':', $request->filtros);
-            $marcas = $marcas->where($parametros[0], $parametros[1], $parametros[2]);
+            $filtros = explode(';', $request->filtros);
+            foreach($filtros as $key=>$item){   
+                $filtro = explode(':', $item);
+                $marcas = $marcas->where($filtro[0], $filtro[1], $filtro[2]);
+            }
         }
 
         if($request->has('atributos')){
