@@ -25,6 +25,11 @@ class MarcaController extends Controller
             $marcas = $this->marca->with('modelos');
         }
 
+        if($request->has('filtros')){
+            $parametros = explode(':', $request->filtros);
+            $marcas = $marcas->where($parametros[0], $parametros[1], $parametros[2]);
+        }
+
         if($request->has('atributos')){
             $marcas = $marcas->selectRaw($request->atributos)->get();
         } else {
