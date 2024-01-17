@@ -30,4 +30,8 @@ class Modelo extends Model
             'marca_id' => 'required|exists:marcas,id'
         ];
     }
+
+    public function marca() {
+        return $this->belongsTo('App\Models\Marca');
+    }
 }

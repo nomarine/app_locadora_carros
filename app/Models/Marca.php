@@ -26,4 +26,8 @@ class Marca extends Model
             'mimes' => 'A imagem deve ser de um dos seguintes formatos: :values.'
         ];
     }
+
+    public function modelos() {
+        return $this->hasMany('App\Models\Modelo');
+    }
 }
