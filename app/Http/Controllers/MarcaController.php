@@ -64,6 +64,7 @@ class MarcaController extends Controller
         }
 
         if($request->method() === 'PATCH'){
+            $marca->fill($request->all());
             $regrasDinamicas = array();
 
             foreach($marca->regras() as $input => $regra){
@@ -80,13 +81,12 @@ class MarcaController extends Controller
             $request->validate($marca->regras(), $marca->feedback());
         }
         
-        if($request->imagem){
+        if($request->file('imagem')){
             Storage::disk('public')->delete($marca->imagem);
-            $urn_imagem = $request->imagem->store('imagens/marcas', 'public');
+            $imagem = $request->file('imagem');
+            $urn_imagem = $imagem->store('imagens/marcas', 'public');
+            $marca->imagem = $urn_imagem;
         }
-
-        $marca->imagem = $urn_imagem ?? $marca->imagem;
-        $marca->nome = $request->nome ?? $marca->nome;
         
         $marca->save();
         return $marca;
