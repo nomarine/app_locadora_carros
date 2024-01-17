@@ -29,7 +29,7 @@ class MarcaController extends Controller
     {
         $request->validate($this->marca->regras(), $this->marca->feedback());
 
-        $urn_imagem = $request->imagem->store('imagens', 'public');
+        $urn_imagem = $request->imagem->store('imagens/marcas', 'public');
 
         $marca = $this->marca->create([
             'nome'=>$request->nome,
@@ -47,7 +47,7 @@ class MarcaController extends Controller
     {
         $marca = $this->marca->find($id);
         if($marca === null){
-            return response('Recurso não encontrado.', 404);
+            return response('Recurso não encontrado. (Marca)', 404);
         }
         return $marca;
     }
@@ -60,7 +60,7 @@ class MarcaController extends Controller
     {
         $marca = $this->marca->find($id);
         if($marca === null){
-            return response('Recurso não encontrado.', 404);
+            return response('Recurso não encontrado. (Marca)', 404);
         }
 
         if($request->method() === 'PATCH'){
@@ -82,7 +82,7 @@ class MarcaController extends Controller
         
         if($request->imagem){
             Storage::disk('public')->delete($marca->imagem);
-            $urn_imagem = $request->imagem->store('imagens', 'public');
+            $urn_imagem = $request->imagem->store('imagens/marcas', 'public');
         }
 
         $marca->imagem = $urn_imagem ?? $marca->imagem;
@@ -100,13 +100,13 @@ class MarcaController extends Controller
     {
         $marca = $this->marca->find($id);
         if($marca === null){
-            return response('Recurso não encontrado.', 404);
+            return response('Recurso não encontrado. (Marca)', 404);
         }
         Storage::disk('public')->delete($marca->imagem);
         $marca->delete();
         return [
             'marca' => $marca,
-            'mensagem' => 'Marca excluída com sucesso.'
+            'mensagem' => 'Recurso excluído com sucesso. (Marca)'
         ];
     }
 }
