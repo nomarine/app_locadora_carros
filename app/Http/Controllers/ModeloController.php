@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Modelo;
 use App\Http\Requests\StoreModeloRequest;
 use App\Http\Requests\UpdateModeloRequest;
+use App\Http\Requests\IndexModeloRequest;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -16,9 +17,14 @@ class ModeloController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexModeloRequest $request)
     {
-        $modelos = $this->modelo->with('marca')->get();
+        if($request->atributos){
+            $modelos = $this->modelo->with('marca')->selectRaw($request->atributos)->get();
+        } else {
+            $modelos = $this->modelo->with('marca')->get();
+        }
+        
         return $modelos;
     }
 

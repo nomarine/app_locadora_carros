@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Marca;
 use App\Http\Requests\StoreMarcaRequest;
 use App\Http\Requests\UpdateMarcaRequest;
+use App\Http\Requests\IndexMarcaRequest;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -16,9 +17,14 @@ class MarcaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexMarcaRequest $request)
     {
-        $marcas = $this->marca->with('modelos')->get();
+        if($request->atributos){
+            $marcas = $this->marca->with('modelos')->selectRaw($request->atributos)->get();
+        } else {
+            $marcas = $this->marca->with('modelos')->get();
+        }
+        
         return $marcas;
     }
 
