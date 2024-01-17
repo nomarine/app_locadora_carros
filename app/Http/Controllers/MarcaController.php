@@ -19,10 +19,16 @@ class MarcaController extends Controller
      */
     public function index(IndexMarcaRequest $request)
     {
-        if($request->atributos){
-            $marcas = $this->marca->with('modelos')->selectRaw($request->atributos)->get();
+        if($request->has('atributos_modelo')){
+            $marcas = $this->marca->with('modelos:marca_id,'.$request->atributos_modelo);
         } else {
-            $marcas = $this->marca->with('modelos')->get();
+            $marcas = $this->marca->with('modelos');
+        }
+
+        if($request->has('atributos')){
+            $marcas = $marcas->selectRaw($request->atributos)->get();
+        } else {
+            $marcas = $marcas->get();
         }
         
         return $marcas;

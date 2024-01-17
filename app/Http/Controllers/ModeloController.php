@@ -19,12 +19,18 @@ class ModeloController extends Controller
      */
     public function index(IndexModeloRequest $request)
     {
-        if($request->atributos){
-            $modelos = $this->modelo->with('marca')->selectRaw($request->atributos)->get();
+        if($request->has('atributos_marca')){
+            $modelos = $this->modelo->with('marca:id,'.$request->atributos_marca);
         } else {
-            $modelos = $this->modelo->with('marca')->get();
+            $modelos = $this->modelo->with('marca');
         }
-        
+
+        if($request->has('atributos')){
+            $modelos = $modelos->selectRaw($request->atributos)->get();
+        } else {
+            $modelos = $modelos->get();
+        }
+
         return $modelos;
     }
 
