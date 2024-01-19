@@ -18,4 +18,8 @@ class Cliente extends Model
             'nome' => 'required|min:2',
         ];
     }
+    
+    public function locacoes() {
+        return $this->belongsTo('App\Models\Locacao');
+    }
 }

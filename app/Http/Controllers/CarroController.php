@@ -22,11 +22,16 @@ class CarroController extends Controller
     {
         $repositoryCarro = new CarroRepository($this->carro);
 
+        if($request->has('atributos_cliente')){
+            $atributos_modelo = 'cliente:id,'.$request->atributos_modelo;
+        } else {
+            $atributos_modelo = 'cliente'; 
+        }
         if($request->has('atributos_modelo')){
             $atributos_modelo = 'modelo:id,'.$request->atributos_modelo;
         } else {
             $atributos_modelo = 'modelo'; 
-         }
+        }
         if($request->has('atributos_marca')){
             $atributos_marca = 'modelo.marca:id,'.$request->atributos_marca;            
         } else {

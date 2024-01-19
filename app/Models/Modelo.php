@@ -36,6 +36,6 @@ class Modelo extends Model
     }
 
     public function carros() {
-        return $this->belongsTo('App\Models\Carro');
+        return $this->hasMany('App\Models\Carro');
     }
 }
