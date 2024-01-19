@@ -6,6 +6,7 @@ use App\Models\Modelo;
 use App\Http\Requests\StoreModeloRequest;
 use App\Http\Requests\UpdateModeloRequest;
 use App\Http\Requests\IndexModeloRequest;
+use App\Repositories\ModeloRepository;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -19,27 +20,25 @@ class ModeloController extends Controller
      */
     public function index(IndexModeloRequest $request)
     {
+        $repositoryModelo = new ModeloRepository($this->modelo);
+
         if($request->has('atributos_marca')){
-            $modelos = $this->modelo->with('marca:id,'.$request->atributos_marca);
+            $atributos_marca = 'marca:id,'.$request->atributos_marca;
+            $repositoryModelo->selectAtributosRelacionamento($atributos_marca);
         } else {
-            $modelos = $this->modelo->with('marca');
+            $repositoryModelo->selectAtributosRelacionamento('marca');
         }
 
         if($request->has('filtros')){
-            $filtros = explode(';', $request->filtros);
-            foreach($filtros as $key=>$item){   
-                $filtro = explode(':', $item);
-                $modelos = $modelos->where($filtro[0], $filtro[1], $filtro[2]);
-            }
+            $repositoryModelo->filtro($request->filtros);
         }
 
         if($request->has('atributos')){
-            $modelos = $modelos->selectRaw($request->atributos)->get();
-        } else {
-            $modelos = $modelos->get();
+            $atributos = $request->atributos;
+            $repositoryModelo->selectAtributos($atributos);
         }
-
-        return $modelos;
+        
+        return response()->json($repositoryModelo->getResultado(), 200);
     }
 
     /**
