@@ -18,7 +18,7 @@ class Carro extends Model
 
     public function regras() {
         return [
-            'placa' => 'required|unique:carros,placa,'.$this->id.'|size:7',
+            'placa' => 'required|unique:carros,placa,'.$this->id.'|size:7|regex:/[A-Z]{3}[0-9][0-9A-Z][0-9]{2}/i',
             'km' => 'required|integer', 
             'disponivel' => 'required|bool',
             'modelo_id' => 'required|exists:modelos,id'
