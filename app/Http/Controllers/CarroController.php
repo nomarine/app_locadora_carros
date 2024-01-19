@@ -83,9 +83,7 @@ class CarroController extends Controller
         }
         $repositoryCarro->selectAtributosRelacionamento([$atributos_modelo, $atributos_marca]);
 
-        if($request->has('filtros')){
-            $repositoryCarro->filtro($request->filtros);
-        }
+        $repositoryCarro->filtro('id:=:'.$id);
 
         if($request->has('atributos')){
             $atributos = $request->atributos;
