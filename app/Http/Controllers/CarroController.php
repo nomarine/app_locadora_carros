@@ -68,7 +68,7 @@ class CarroController extends Controller
         if($carro === null){
             return response('Recurso não encontrado. (Carro)', 404);
         }
-        
+
         $repositoryCarro = new CarroRepository($this->carro);
 
         if($request->has('atributos_modelo')){
@@ -138,7 +138,7 @@ class CarroController extends Controller
         if($carro === null){
             return response('Recurso não encontrado. (Carro)', 404);
         }
-        Storage::disk('public')->delete($carro->imagem);
+        
         $carro->delete();
         return [
             'Carro' => $carro,
