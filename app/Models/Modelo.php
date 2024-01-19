@@ -34,4 +34,8 @@ class Modelo extends Model
     public function marca() {
         return $this->belongsTo('App\Models\Marca');
     }
+
+    public function carros() {
+        return $this->belongsTo('App\Models\Carro');
+    }
 }
