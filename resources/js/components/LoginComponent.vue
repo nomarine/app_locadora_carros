@@ -45,6 +45,10 @@
                                         Entrar
                                     </button>
 
+                                    <a class="btn btn-link" href="#">
+                                        Esqueci a senha
+                                    </a>
+
                                 </div>
                             </div>
                         </form>
