@@ -44,10 +44,9 @@
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="#">Carros</a></li>
                               <li><hr class="dropdown-divider"></li>
-                              <li><a class="dropdown-item" href="#">Marcas</a></li>
+                              <li><a class="dropdown-item" href="{{route('marcas')}}">Marcas</a></li>
                               <li><hr class="dropdown-divider"></li>
                               <li><a class="dropdown-item" href="#">Modelos</a></li>
-                              <li><hr class="dropdown-divider"></li>
                             </ul>
                         </li>
                     </ul>
