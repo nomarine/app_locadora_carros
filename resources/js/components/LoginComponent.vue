@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Login (teste componente)</div>
+                    <div class="card-header">Login (teste componente com run watch)</div>
 
                     <div class="card-body">
                         <form method="POST" action="">
