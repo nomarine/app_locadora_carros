@@ -50,6 +50,14 @@
             </div>
         </div>
         <modal-component id="createMarca" titulo="Adicionar marca">
+            
+            <template v-slot:alertas>
+                <alert-component tipo="danger">
+                </alert-component>
+                <alert-component tipo="success">
+                </alert-component>
+            </template>
+
             <template v-slot:form>
                 <div class="form-group">
                     <input-container-component 
@@ -60,7 +68,6 @@
                     >
                         <input type="text" class="form-control" id="inputNovoNome" aria-describedby="ajudaNovoNome" v-model="marcaNome">
                     </input-container-component>
-                    {{marcaNome}}
 
                     <input-container-component 
                         id="inputNovaLogo" 
@@ -70,7 +77,7 @@
                     >
                         <input type="file" class="form-control-file" id="inputNovaLogo" aria-describedby="ajudaNovaLogo" @change="carregarImagem($event)">
                     </input-container-component>
-                    {{marcaLogo}}
+
                 </div>
             </template>
             <template v-slot:rodape>
