@@ -58,8 +58,9 @@
                         ajuda-id="ajudaNovoNome" 
                         ajuda-texto="Informe o nome da marca."
                     >
-                        <input type="text" class="form-control" id="inputNome" aria-describedby="ajudaNovoNome">
+                        <input type="text" class="form-control" id="inputNovoNome" aria-describedby="ajudaNovoNome" v-model="marcaNome">
                     </input-container-component>
+                    {{marcaNome}}
 
                     <input-container-component 
                         id="inputNovaLogo" 
@@ -67,18 +68,63 @@
                         ajuda-id="ajudaNovaLogo" 
                         ajuda-texto="Anexe o logo da marca."
                     >
-                        <input type="file" class="form-control-file" id="inputNovaLogo" aria-describedby="ajudaNovaLogo">
+                        <input type="file" class="form-control-file" id="inputNovaLogo" aria-describedby="ajudaNovaLogo" @change="carregarImagem($event)">
                     </input-container-component>
+                    {{marcaLogo}}
                 </div>
             </template>
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-primary" @click="storeMarca()">Salvar</button>
             </template>
         </modal-component>        
     </div>
 </template>
 
 <script>
+    export default {
+        data() {
+            return {
+                urlBase: 'http://127.0.0.1:8000/api/v1/marca',
+                marcaNome: '',
+                marcaLogo: []
+            }
+        },
+        computed: {
+            token() {
+                let cookie = document.cookie.split(';').find(indice => {
+                    return indice.includes('token=')
+                })
+                cookie = cookie.split('=')
+                console.log(cookie[1])
 
+                return cookie[1]
+            }
+        },
+        methods: {
+            carregarImagem(e) {
+                this.marcaLogo = e.target.files
+            },
+            storeMarca(){
+                let formData = new FormData()
+                formData.append('nome', this.marcaNome)
+                formData.append('imagem', this.marcaLogo[0])
+                let config = {
+                    headers: {
+                        'Content-Type':'multipart/form-data',
+                        'Accept':'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+                axios.post(this.urlBase, formData, config)
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(errors => {
+                        console.log(errors)
+                    })
+                
+            }
+        }
+    }
 </script>
