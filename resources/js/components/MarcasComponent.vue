@@ -49,7 +49,33 @@
                 <!-- final card resultado -->
             </div>
         </div>
-        <modal-component id="createMarca" titulo="Adicionar marca"></modal-component>
+        <modal-component id="createMarca" titulo="Adicionar marca">
+            <template v-slot:form>
+                <div class="form-group">
+                    <input-container-component 
+                        id="inputNovoNome" 
+                        label="Nome da Marca" 
+                        ajuda-id="ajudaNovoNome" 
+                        ajuda-texto="Informe o nome da marca."
+                    >
+                        <input type="text" class="form-control" id="inputNome" aria-describedby="ajudaNovoNome">
+                    </input-container-component>
+
+                    <input-container-component 
+                        id="inputNovaLogo" 
+                        label="Logo da Marca" 
+                        ajuda-id="ajudaNovaLogo" 
+                        ajuda-texto="Anexe o logo da marca."
+                    >
+                        <input type="file" class="form-control-file" id="inputNovaLogo" aria-describedby="ajudaNovaLogo">
+                    </input-container-component>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Salvar</button>
+            </template>
+        </modal-component>        
     </div>
 </template>
 
