@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <!-- início card pesquisa -->
-                <card-component titulo="Pesquisa por marcas">
+                <card-component style="margin-bottom: 16px" titulo="Pesquisa por marcas">
                     <template v-slot:conteudo>
                         <div class="form-row">
                             <div class="col mb-3">
