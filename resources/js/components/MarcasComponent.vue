@@ -51,7 +51,7 @@
         </div>
         <modal-component id="createMarca" titulo="Adicionar marca">
             
-            <template v-slot:alertas v-if="transacaoDetalhes">
+            <template v-slot:alertas v-if="transacaoStatus">
                 <alert-component :tipo="alertTipo" :titulo="transacaoStatus" :detalhes="transacaoDetalhes">
                 </alert-component>
             </template>
@@ -96,7 +96,7 @@
                 marcaLogo: [],
 
                 transacaoStatus: '',
-                transacaoDetalhes: '',
+                transacaoDetalhes: {},
                 alertTipo: ''
             }
         },
@@ -129,13 +129,18 @@
                     .then(response => {
                         this.alertTipo = 'success'
                         this.transacaoStatus = "Sucesso! Marca criada."
-                        this.transacaoDetalhes = response.data
+                        this.transacaoDetalhes = {
+                            mensagem: `ID do novo registro: ${response.data.id}`
+                        }
                         console.log(response)
                     })
                     .catch(errors => {
                         this.alertTipo = 'danger'
                         this.transacaoStatus = "Erro ao tentar criar a marca."
-                        this.transacaoDetalhes = errors.response
+                        this.transacaoDetalhes = {
+                            mensagem: errors.message,
+                            erros: errors.response.data.errors
+                        }
                         console.log(errors)
                     })
                 
