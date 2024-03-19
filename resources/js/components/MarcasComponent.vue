@@ -51,10 +51,8 @@
         </div>
         <modal-component id="createMarca" titulo="Adicionar marca">
             
-            <template v-slot:alertas>
-                <alert-component tipo="danger">
-                </alert-component>
-                <alert-component tipo="success">
+            <template v-slot:alertas v-if="transacaoDetalhes">
+                <alert-component :tipo="alertTipo" :titulo="transacaoStatus" :detalhes="transacaoDetalhes">
                 </alert-component>
             </template>
 
@@ -93,8 +91,13 @@
         data() {
             return {
                 urlBase: 'http://127.0.0.1:8000/api/v1/marca',
+
                 marcaNome: '',
-                marcaLogo: []
+                marcaLogo: [],
+
+                transacaoStatus: '',
+                transacaoDetalhes: '',
+                alertTipo: ''
             }
         },
         computed: {
@@ -103,7 +106,6 @@
                     return indice.includes('token=')
                 })
                 cookie = cookie.split('=')
-                console.log(cookie[1])
 
                 return cookie[1]
             }
@@ -125,9 +127,15 @@
                 }
                 axios.post(this.urlBase, formData, config)
                     .then(response => {
+                        this.alertTipo = 'success'
+                        this.transacaoStatus = "Sucesso! Marca criada."
+                        this.transacaoDetalhes = response.data
                         console.log(response)
                     })
                     .catch(errors => {
+                        this.alertTipo = 'danger'
+                        this.transacaoStatus = "Erro ao tentar criar a marca."
+                        this.transacaoDetalhes = errors.response
                         console.log(errors)
                     })
                 
