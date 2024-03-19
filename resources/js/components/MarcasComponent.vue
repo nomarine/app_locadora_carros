@@ -94,11 +94,15 @@
 
                 marcaNome: '',
                 marcaLogo: [],
+                marcas: [],
 
                 transacaoStatus: '',
                 transacaoDetalhes: {},
                 alertTipo: ''
             }
+        },
+        mounted() {
+            this.carregarMarcas()
         },
         computed: {
             token() {
@@ -143,7 +147,16 @@
                         }
                         console.log(errors)
                     })
-                
+            },
+            carregarMarcas() {
+                axios.get(this.urlBase)
+                    .then(response => {
+                        this.marcas = response.data
+                        console.log(this.marcas)
+                    })
+                    .catch(errors => 
+                        console.log(errors)
+                    )
             }
         }
     }
