@@ -39,7 +39,7 @@
                 <!-- início card resultado -->
                 <card-component titulo="Marcas encontradas">
                     <template v-slot:conteudo>                        
-                        <table-component :dados="marcas" :campos="['id', 'nome', 'imagem']"></table-component>
+                        <table-component :dados="marcas" :campos="camposTabela"></table-component>
                     </template>
 
                     <template v-slot:rodape>
@@ -95,6 +95,12 @@
                 marcaNome: '',
                 marcaLogo: [],
                 marcas: [],
+                camposTabela: {
+                    id: {titulo: 'ID', tipo: 'texto'}, 
+                    nome: {titulo: 'Nome', tipo: 'texto'}, 
+                    imagem: {titulo: 'Logo', tipo: 'imagem'},
+                    created_at: {titulo: 'Incluído em', tipo: 'timestamp'}
+                },
 
                 transacaoStatus: '',
                 transacaoDetalhes: {},
@@ -112,6 +118,13 @@
                 cookie = cookie.split('=')
 
                 return cookie[1]
+            },
+            marcasFormatted() {
+                return this.marcas.map(marca => {
+                    // Assuming created_at is in ISO format
+                    marca.created_at_formatted = new Date(marca.created_at).toLocaleDateString();
+                    return marca;
+                });
             }
         },
         methods: {
@@ -157,7 +170,7 @@
                     .catch(errors => 
                         console.log(errors)
                     )
-            }
+            },
         }
     }
 </script>
