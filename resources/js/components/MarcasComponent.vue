@@ -167,7 +167,6 @@
                 axios.get(this.urlBase, this.config)
                     .then(response => {
                         this.marcas = response.data
-                        console.log(this.marcas)
                     })
                     .catch(errors => 
                         console.log(errors)

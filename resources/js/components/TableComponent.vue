@@ -6,17 +6,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="obj in dados" :key="obj.id">
-                <td v-for="valor, chave in campos" :key="chave">
-                    <span v-if="valor['tipo'] === 'imagem'">
-                        <img :src="'/storage/'+obj[chave]" height="30" width="30">
-                    </span>
-                    <span v-else-if="valor['tipo'] === 'timestamp'">
-                        {{ formatTimestamp(obj[chave]) }}
-                    </span>
-                    <span v-else>
+            <tr v-for="obj,key in dadosFiltrados" :key="key">
+                <td v-for="campo, chave in campos" :key="chave">
+                   <span v-if="campo.tipo === 'imagem'">
+                        <img :src="'/storage/'+obj[chave]" width="30" height="30">
+                   </span>
+                   <span v-else-if="campo.tipo === 'timestamp'">
+                        ...{{obj[chave]}}
+                   </span>
+                   <span v-else>
                         {{obj[chave]}}
-                    </span>
+                   </span>
                 </td>
             </tr>
         </tbody>
@@ -29,6 +29,24 @@
             'campos',
             'dados'
         ],
+        computed: {
+            dadosFiltrados() {
+                let chavesCamposTabela = Object.keys(this.campos)
+                let dadosFiltrados = []
+
+                this.dados.map((dado, chave) => {
+                    let dadoFiltrado = {}
+
+                    chavesCamposTabela.forEach(campo => {
+                        dadoFiltrado[campo] = dado[campo]
+                    })
+                    dadosFiltrados.push(dadoFiltrado)
+                })
+                console.log(dadosFiltrados)
+            
+                return dadosFiltrados
+            }
+        },
         methods: {
             formatTimestamp(timestamp) {
                 const date = new Date(timestamp);
