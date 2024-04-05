@@ -7,15 +7,15 @@
         </thead>
         <tbody>
             <tr v-for="obj,key in dadosFiltrados" :key="key">
-                <td v-for="campo, chave in campos" :key="chave">
-                   <span v-if="campo.tipo === 'imagem'">
-                        <img :src="'/storage/'+obj[chave]" width="30" height="30">
+                <td v-for="campo, chave in obj" :key="chave">
+                   <span v-if="campos[chave].tipo === 'imagem'">
+                        <img :src="'/storage/'+campo" width="30" height="30">
                    </span>
-                   <span v-else-if="campo.tipo === 'timestamp'">
-                        ...{{obj[chave]}}
+                   <span v-else-if="campos[chave].tipo === 'timestamp'">
+                        ...{{campo}}
                    </span>
                    <span v-else>
-                        {{obj[chave]}}
+                        {{campo}}
                    </span>
                 </td>
             </tr>
