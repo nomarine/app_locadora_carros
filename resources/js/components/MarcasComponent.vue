@@ -119,6 +119,14 @@
 
                 return cookie[1]
             },
+            config() {
+                return { headers: {
+                        'Content-Type':'multipart/form-data',
+                        'Accept':'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+            },
             marcasFormatted() {
                 return this.marcas.map(marca => {
                     // Assuming created_at is in ISO format
@@ -135,14 +143,8 @@
                 let formData = new FormData()
                 formData.append('nome', this.marcaNome)
                 formData.append('imagem', this.marcaLogo[0])
-                let config = {
-                    headers: {
-                        'Content-Type':'multipart/form-data',
-                        'Accept':'application/json',
-                        'Authorization': `Bearer ${this.token}`
-                    }
-                }
-                axios.post(this.urlBase, formData, config)
+
+                axios.post(this.urlBase, formData, this.config)
                     .then(response => {
                         this.alertTipo = 'success'
                         this.transacaoStatus = "Sucesso! Marca criada."
@@ -162,7 +164,7 @@
                     })
             },
             carregarMarcas() {
-                axios.get(this.urlBase)
+                axios.get(this.urlBase, this.config)
                     .then(response => {
                         this.marcas = response.data
                         console.log(this.marcas)
