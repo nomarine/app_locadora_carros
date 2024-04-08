@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th scope="col" v-for="campo, key in campos" :key="key">{{campo.titulo}}</th>
+                <th v-if="actions.visualizar || actions.editar || actions.remover">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -18,6 +19,11 @@
                         {{obj[chave]}}
                     </span>
                 </td>
+                <td>
+                    <button v-if="actions.visualizar" class="btn btn-outline-primary btn-sm mr-1">Visualizar</button>
+                    <button v-if="actions.editar" class="btn btn-outline-primary btn-sm mr-1">Editar</button>
+                    <button v-if="actions.remover" class="btn btn-outline-danger btn-sm mr-1">Remover</button>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -27,7 +33,8 @@
     export default {
         props: [
             'campos',
-            'dados'
+            'dados',
+            'actions'
         ],
         data() {
             return {
@@ -49,7 +56,7 @@
                 });
                 return formattedDate;
             },
-            
+
         }
     }
 </script>
