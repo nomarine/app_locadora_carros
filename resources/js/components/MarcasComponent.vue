@@ -13,7 +13,7 @@
                                     ajuda-id="ajudaId" 
                                     ajuda-texto="Opcional. Informe o ID da marca. Apenas números."
                                 >
-                                    <input type="number" class="form-control" id="inputId" aria-describedby="ajudaId">
+                                    <input type="number" class="form-control" id="inputId" aria-describedby="ajudaId" v-model="atributos.id">
                                 </input-container-component>
                             </div>
 
@@ -24,14 +24,14 @@
                                     ajuda-id="ajudaNome" 
                                     ajuda-texto="Opcional. Informe o nome da marca."
                                 >
-                                    <input type="text" class="form-control" id="inputNome" aria-describedby="ajudaNome">
+                                    <input type="text" class="form-control" id="inputNome" aria-describedby="ajudaNome" v-model="atributos.nome">
                                 </input-container-component>
                             </div>
                         </div>
                     </template>
 
                     <template v-slot:rodape>
-                        <button type="submit" class="btn btn-primary btn-sm float-right">Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm float-right" @click="buscarMarcas()">Pesquisar</button>
                     </template>
                 </card-component>
                 <!-- final card pesquisa -->
@@ -102,6 +102,8 @@
         data() {
             return {
                 urlBase: 'http://127.0.0.1:8000/api/v1/marca',
+                paramPaginacao: '',
+                paramFiltro: '',
 
                 marcaNome: '',
                 marcaLogo: [],
@@ -112,6 +114,7 @@
                     imagem: {titulo: 'Logo', tipo: 'imagem'},
                     created_at: {titulo: 'Incluído em', tipo: 'timestamp'}
                 },
+                atributos: { id: '', nome: ''},
 
                 transacaoStatus: '',
                 transacaoDetalhes: {},
@@ -175,7 +178,8 @@
                     })
             },
             carregarMarcas() {
-                axios.get(this.urlBase, this.config)
+                let url = this.urlBase + '?' + this.paramPaginacao + this.paramFiltro
+                axios.get(url, this.config)
                     .then(response => {
                         this.marcas = response.data
                         console.log(this.marcas)
@@ -186,9 +190,28 @@
             },
             paginar(link) {
                 if(link.url){
-                    this.urlBase = link.url
+                    this.paramPaginacao = link.url.split('?')[1]
                     this.carregarMarcas()
                 }
+            },
+            buscarMarcas(){
+                let filtro = ''
+
+                for(let atributo in this.atributos){
+                    if(this.atributos[atributo]){
+                        if(filtro != ''){
+                            filtro += ';';
+                        }
+                        filtro += atributo + ':like:%' + this.atributos[atributo] + '%'
+                    }
+                }
+                if(filtro != ''){
+                    this.paramPaginacao = 'page=1'
+                    this.paramFiltro = '&filtros=' + filtro
+                } else {
+                    this.paramFiltro = ''
+                }
+                this.carregarMarcas()
             }
         }
     }
