@@ -43,7 +43,18 @@
                     </template>
 
                     <template v-slot:rodape>
-                        <button type="submit" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#createMarca">Adicionar</button>
+                        <div class="row">
+                            <div class="col-10">
+                                <pagination-component>
+                                    <li v-for="link, key in marcas.links" :key="key" :class="link.active ? 'page-item active' : 'page-item'" @click="paginar(link)">
+                                        <a class="page-link" href="#" v-html="link.label"></a>
+                                    </li>
+                                </pagination-component>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#createMarca">Adicionar</button>
+                            </div>
+                        </div>
                     </template>
                 </card-component>
                 <!-- final card resultado -->
@@ -167,12 +178,18 @@
                 axios.get(this.urlBase, this.config)
                     .then(response => {
                         this.marcas = response.data
-                        /* console.log(this.marcas) */
+                        console.log(this.marcas)
                     })
                     .catch(errors => 
                         console.log(errors)
                     )
             },
+            paginar(link) {
+                if(link.url){
+                    this.urlBase = link.url
+                    this.carregarMarcas()
+                }
+            }
         }
     }
 </script>

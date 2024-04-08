@@ -29,6 +29,14 @@
             'campos',
             'dados'
         ],
+        data() {
+            return {
+                
+            }
+        },
+        computed: {
+
+        },
         methods: {
             formatTimestamp(timestamp) {
                 const date = new Date(timestamp);
@@ -40,7 +48,8 @@
                     minute: '2-digit'
                 });
                 return formattedDate;
-            }
+            },
+            
         }
     }
 </script>
