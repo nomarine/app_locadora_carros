@@ -39,7 +39,7 @@
                 <!-- início card resultado -->
                 <card-component titulo="Marcas encontradas">
                     <template v-slot:conteudo>                        
-                        <table-component :dados="marcas" :campos="camposTabela"></table-component>
+                        <table-component :dados="marcas.data" :campos="camposTabela"></table-component>
                     </template>
 
                     <template v-slot:rodape>
@@ -94,7 +94,7 @@
 
                 marcaNome: '',
                 marcaLogo: [],
-                marcas: [],
+                marcas: { data: [] },
                 camposTabela: {
                     id: {titulo: 'ID', tipo: 'texto'}, 
                     nome: {titulo: 'Nome', tipo: 'texto'}, 
