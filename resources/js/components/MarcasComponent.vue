@@ -39,7 +39,7 @@
                 <!-- início card resultado -->
                 <card-component titulo="Marcas encontradas">
                     <template v-slot:conteudo>                        
-                        <table-component :dados="marcas" :campos="camposTabela"></table-component>
+                        <table-component :dados="marcas.data" :campos="camposTabela"></table-component>
                     </template>
 
                     <template v-slot:rodape>
@@ -167,7 +167,7 @@
                 axios.get(this.urlBase, this.config)
                     .then(response => {
                         this.marcas = response.data
-                        console.log(this.marcas)
+                        /* console.log(this.marcas) */
                     })
                     .catch(errors => 
                         console.log(errors)
