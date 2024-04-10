@@ -2,7 +2,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                {{ $store.state.teste }}
                 <!-- início card pesquisa -->
                 <card-component style="margin-bottom: 16px" titulo="Pesquisa por marcas">
                     <template v-slot:conteudo>
@@ -103,7 +102,14 @@
         
         <modal-component id="showMarca" titulo="Visualizar marca">
             <template v-slot:conteudo>
-                Teste
+                <label for="marcaId">ID</label>
+                <input type="text" class="form-control" id="marcaId" :value="$store.state.item.id" disabled>
+                <label for="marcaNome">Nome</label>
+                <input type="text" class="form-control" id="marcaNome" :value="$store.state.item.nome" disabled>
+                <label for="marcaImagem">Imagem</label>
+                <br><img id="marcaImagem" :src="'storage/'+$store.state.item.imagem" width="40%" height="40%"><br>
+                <label for="marcaDtCriacao">Data de Criação</label>
+                <input type="text" class="form-control" id="marcaDtCriacao" :value="$store.state.item.created_at" disabled>
             </template>
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -156,13 +162,6 @@
                     }
                 }
             },
-            marcasFormatted() {
-                return this.marcas.map(marca => {
-                    // Assuming created_at is in ISO format
-                    marca.created_at_formatted = new Date(marca.created_at).toLocaleDateString();
-                    return marca;
-                });
-            }
         },
         methods: {
             carregarImagem(e) {

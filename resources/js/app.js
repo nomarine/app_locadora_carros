@@ -6,11 +6,14 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+
+/** Implementação do vueX */
 import { createStore } from 'vuex'
 
 const store = createStore({
     state: {
-        teste: 'Esse é um teste'
+        teste: 'Esse é um teste',
+        item: {}
     }
     
   })

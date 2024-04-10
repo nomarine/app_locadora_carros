@@ -20,7 +20,7 @@
                     </span>
                 </td>
                 <td>
-                    <button v-if="actions.visualizar.visivel" class="btn btn-outline-primary btn-sm mr-1" :data-toggle="actions.visualizar.dataToggle" :data-target="actions.visualizar.dataTarget">Visualizar</button>
+                    <button v-if="actions.visualizar.visivel" class="btn btn-outline-primary btn-sm mr-1" :data-toggle="actions.visualizar.dataToggle" :data-target="actions.visualizar.dataTarget" @click="setStore(obj)">Visualizar</button>
                     <button v-if="actions.editar" class="btn btn-outline-primary btn-sm mr-1">Editar</button>
                     <button v-if="actions.remover" class="btn btn-outline-danger btn-sm mr-1">Remover</button>
                 </td>
@@ -56,7 +56,9 @@
                 });
                 return formattedDate;
             },
-
+            setStore(item){
+                this.$store.state.item = item;
+            }
         }
     }
 </script>
