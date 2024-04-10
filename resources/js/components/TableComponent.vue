@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th scope="col" v-for="campo, key in campos" :key="key">{{campo.titulo}}</th>
-                <th v-if="actions.visualizar.visivel || actions.editar || actions.remover">Ações</th>
+                <th v-if="actions">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -19,10 +19,10 @@
                         {{obj[chave]}}
                     </span>
                 </td>
-                <td>
+                <td v-if="actions">
                     <button v-if="actions.visualizar.visivel" class="btn btn-outline-primary btn-sm mr-1" :data-toggle="actions.visualizar.dataToggle" :data-target="actions.visualizar.dataTarget" @click="setStore(obj)">Visualizar</button>
                     <button v-if="actions.editar" class="btn btn-outline-primary btn-sm mr-1">Editar</button>
-                    <button v-if="actions.remover" class="btn btn-outline-danger btn-sm mr-1">Remover</button>
+                    <button v-if="actions.remover" class="btn btn-outline-danger btn-sm mr-1" :data-toggle="actions.remover.dataToggle" :data-target="actions.remover.dataTarget" @click="setStore(obj)">Remover</button>
                 </td>
             </tr>
         </tbody>
