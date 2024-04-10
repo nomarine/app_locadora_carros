@@ -42,7 +42,7 @@
                         <table-component 
                             :dados="marcas.data" 
                             :campos="camposTabela"
-                            :actions="{ visualizar: true, editar: true, remover: true}">
+                            :actions="{ visualizar: { visivel: true, dataToggle: 'modal', dataTarget: '#showMarca' }, editar: true, remover: true}">
                         </table-component>
                     </template>
 
@@ -71,7 +71,7 @@
                 </alert-component>
             </template>
 
-            <template v-slot:form>
+            <template v-slot:conteudo>
                 <div class="form-group">
                     <input-container-component 
                         id="inputNovoNome" 
@@ -93,11 +93,21 @@
 
                 </div>
             </template>
+
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" @click="storeMarca()">Salvar</button>
             </template>
-        </modal-component>        
+        </modal-component>  
+        
+        <modal-component id="showMarca" titulo="Visualizar marca">
+            <template v-slot:conteudo>
+                Teste
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </template>
+        </modal-component>
     </div>
 </template>
 
