@@ -2,6 +2,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                {{ $store.state.teste }}
                 <!-- início card pesquisa -->
                 <card-component style="margin-bottom: 16px" titulo="Pesquisa por marcas">
                     <template v-slot:conteudo>
