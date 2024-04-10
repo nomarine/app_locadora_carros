@@ -13,7 +13,8 @@ import { createStore } from 'vuex'
 const store = createStore({
     state: {
         teste: 'Esse é um teste',
-        item: {}
+        item: {},
+        transacao: {status: '', detalhes: {mensagem: '', erros: ''}},
     }
     
   })

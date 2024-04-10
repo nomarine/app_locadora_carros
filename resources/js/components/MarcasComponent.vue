@@ -70,8 +70,8 @@
 
         <!-- Início Modais -->
         <modal-component id="createMarca" titulo="Adicionar marca">
-            <template v-slot:alertas v-if="transacaoStatus">
-                <alert-component :tipo="alertTipo" :titulo="transacaoStatus" :detalhes="transacaoDetalhes">
+            <template v-slot:alertas v-if="this.$store.state.transacao.status">
+                <alert-component :tipo="alertTipo" :titulo="this.$store.state.transacao.status" :detalhes="this.$store.state.transacao.detalhes">
                 </alert-component>
             </template>
 
@@ -100,7 +100,7 @@
 
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" @click="storeMarca()">Salvar</button>
+                <button type="button" class="btn btn-primary" @click="salvarMarca()">Salvar</button>
             </template>
         </modal-component>  
         
@@ -121,6 +121,10 @@
         </modal-component>
 
         <modal-component id="destroyMarca" titulo="Remover marca">
+            <template v-slot:alertas v-if="this.$store.state.transacao.status">
+                <alert-component :tipo="alertTipo" :titulo="this.$store.state.transacao.status" :detalhes="this.$store.state.transacao.detalhes">
+                </alert-component>
+            </template>
             <template v-slot:conteudo>
                 <label for="marcaId">ID</label>
                 <input type="text" class="form-control" id="marcaId" :value="$store.state.item.id" disabled>
@@ -129,7 +133,7 @@
             </template>
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Remover</button>
+                <button type="button" class="btn btn-danger" @click="removerMarca">Remover</button>
             </template>
         </modal-component>
         <!-- Fim Modais -->
@@ -170,7 +174,7 @@
                 })
                 cookie = cookie.split('=')
 
-                return cookie[1]
+                return `Bearer ${cookie[1]}`
             },
             config() {
                 return { headers: {
@@ -185,7 +189,7 @@
             carregarImagem(e) {
                 this.marcaLogo = e.target.files
             },
-            storeMarca(){
+            salvarMarca(){
                 let formData = new FormData()
                 formData.append('nome', this.marcaNome)
                 formData.append('imagem', this.marcaLogo[0])
@@ -193,20 +197,21 @@
                 axios.post(this.urlBase, formData, this.config)
                     .then(response => {
                         this.alertTipo = 'success'
-                        this.transacaoStatus = "Sucesso! Marca criada."
-                        this.transacaoDetalhes = {
+                        this.$store.state.transacao.status = "Sucesso! Marca criada."
+                        this.$store.state.transacao.detalhes = {
                             mensagem: `ID do novo registro: ${response.data.id}`
                         }
-                        console.log(response)
+                        this.carregarMarcas()
                     })
                     .catch(errors => {
                         this.alertTipo = 'danger'
-                        this.transacaoStatus = "Erro ao tentar criar a marca."
-                        this.transacaoDetalhes = {
-                            mensagem: errors.message,
-                            erros: errors.response.data.errors
+                        this.$store.state.transacao = {
+                            status: "Erro ao tentar criar a marca.",
+                            detalhes: { 
+                                mensagem: errors.message,
+                                erros: errors.response.data.errors
+                            }
                         }
-                        console.log(errors)
                     })
             },
             carregarMarcas() {
@@ -219,6 +224,37 @@
                     .catch(errors => 
                         console.log(errors)
                     )
+            },
+            removerMarca() {
+                let confirmacao = confirm('Tem certeza que deseja excluir a marca?')
+                if(!confirmacao){
+                    return false
+                }
+                let url = this.urlBase + '/' + this.$store.state.item.id
+                let formData = new FormData
+                formData.append('_method', 'delete')
+                axios.post(url, formData, this.config)
+                    .then(response => { 
+                        this.alertTipo = 'success'
+                        this.$store.state.transacao.status = "Sucesso!"
+                        this.$store.state.transacao.detalhes = {
+                            mensagem: `Registro excluído com sucesso: ${this.$store.state.item.id}`
+                        }
+                        console.log(this.$store.state.transacao)
+                        this.carregarMarcas()
+                    })
+                    .catch(errors => {
+                        this.alertTipo = 'danger'
+                        this.$store.state.transacao = {
+                            status: "Erro ao tentar remover a marca.",
+                            detalhes: { 
+                                mensagem: errors.message,
+                                erros: errors.response.data.errors
+                            }
+                        }
+                        console.log(this.$store.state.transacao)
+                        
+                    })
             },
             paginar(link) {
                 if(link.url){

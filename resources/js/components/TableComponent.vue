@@ -10,7 +10,7 @@
             <tr v-for="obj in dados" :key="obj.id">
                 <td v-for="valor, chave in campos" :key="chave">
                     <span v-if="valor['tipo'] === 'imagem'">
-                        <img :src="'/storage/'+obj[chave]" height="30" width="30">
+                        <img :src="'/storage/'+obj[chave]" height="20%" width="20%">
                     </span>
                     <span v-else-if="valor['tipo'] === 'timestamp'">
                         {{ formatTimestamp(obj[chave]) }}
@@ -38,8 +38,11 @@
         ],
         data() {
             return {
-                
+     
             }
+        },
+        mounted() {
+            
         },
         computed: {
 
@@ -58,6 +61,7 @@
             },
             setStore(item){
                 this.$store.state.item = item;
+                this.$store.state.transacao = {status: '', detalhes: {mensagem: '', erros: ''}}
             }
         }
     }
