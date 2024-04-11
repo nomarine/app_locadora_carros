@@ -197,19 +197,9 @@
             this.carregarMarcas()
         },
         computed: {
-            token() {
-                let cookie = document.cookie.split(';').find(indice => {
-                    return indice.includes('token=')
-                })
-                cookie = cookie.split('=')
-
-                return `Bearer ${cookie[1]}`
-            },
             config() {
                 return { headers: {
                         'Content-Type':'multipart/form-data',
-                        'Accept':'application/json',
-                        'Authorization': `Bearer ${this.token}`
                     }
                 }
             },
@@ -280,7 +270,7 @@
             },
             carregarMarcas() {
                 let url = this.urlBase + '?' + this.paramPaginacao + this.paramFiltro
-                axios.get(url, this.config)
+                axios.get(url)
                     .then(response => {
                         this.marcas = response.data
                     })
@@ -296,7 +286,7 @@
                 let url = this.urlBase + '/' + this.$store.state.item.id
                 let formData = new FormData
                 formData.append('_method', 'delete')
-                axios.post(url, formData, this.config)
+                axios.post(url, formData)
                     .then(response => { 
                         this.alertTipo = 'success'
                         this.$store.state.transacao.status = "Sucesso!"
