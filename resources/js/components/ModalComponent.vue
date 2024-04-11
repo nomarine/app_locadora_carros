@@ -5,7 +5,7 @@
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">{{titulo}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="limparTransacao()">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -29,7 +29,13 @@
         props: [
             'id',
             'titulo'
-        ]
+        ],
+        methods: {
+            limparTransacao(){
+                inputAlterarLogo.value=''
+                this.$store.state.transacao = {status: '', detalhes: {mensagem: '', erros: ''}}
+            }
+        }
     }
 </script>
 

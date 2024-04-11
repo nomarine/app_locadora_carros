@@ -21,7 +21,7 @@
                 </td>
                 <td v-if="actions">
                     <button v-if="actions.visualizar.visivel" class="btn btn-outline-primary btn-sm mr-1" :data-toggle="actions.visualizar.dataToggle" :data-target="actions.visualizar.dataTarget" @click="setStore(obj)">Visualizar</button>
-                    <button v-if="actions.editar" class="btn btn-outline-primary btn-sm mr-1">Editar</button>
+                    <button v-if="actions.editar" class="btn btn-outline-primary btn-sm mr-1" :data-toggle="actions.editar.dataToggle" :data-target="actions.editar.dataTarget" @click="setStore(obj)">Editar</button>
                     <button v-if="actions.remover" class="btn btn-outline-danger btn-sm mr-1" :data-toggle="actions.remover.dataToggle" :data-target="actions.remover.dataTarget" @click="setStore(obj)">Remover</button>
                 </td>
             </tr>
@@ -60,7 +60,7 @@
                 return formattedDate;
             },
             setStore(item){
-                this.$store.state.item = item;
+                this.$store.state.item = item
                 this.$store.state.transacao = {status: '', detalhes: {mensagem: '', erros: ''}}
             }
         }

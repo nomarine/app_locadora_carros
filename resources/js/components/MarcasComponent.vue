@@ -44,8 +44,9 @@
                             :campos="camposTabela"
                             :actions="{ 
                                 visualizar: { visivel: true, dataToggle: 'modal', dataTarget: '#showMarca' }, 
-                                editar: true, 
-                                remover: { visivel: true, dataToggle: 'modal', dataTarget: '#destroyMarca' } }">
+                                editar: { visivel: true, dataToggle: 'modal', dataTarget: '#updateMarca' }, 
+                                remover: { visivel: true, dataToggle: 'modal', dataTarget: '#destroyMarca' } 
+                            }">
                         </table-component>
                     </template>
 
@@ -74,7 +75,6 @@
                 <alert-component :tipo="alertTipo" :titulo="this.$store.state.transacao.status" :detalhes="this.$store.state.transacao.detalhes">
                 </alert-component>
             </template>
-
             <template v-slot:conteudo>
                 <div class="form-group">
                     <input-container-component 
@@ -85,7 +85,6 @@
                     >
                         <input type="text" class="form-control" id="inputNovoNome" aria-describedby="ajudaNovoNome" v-model="marcaNome">
                     </input-container-component>
-
                     <input-container-component 
                         id="inputNovaLogo" 
                         label="Logo da Marca" 
@@ -94,12 +93,10 @@
                     >
                         <input type="file" class="form-control-file" id="inputNovaLogo" aria-describedby="ajudaNovaLogo" @change="carregarImagem($event)">
                     </input-container-component>
-
                 </div>
             </template>
-
             <template v-slot:rodape>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="limparTransacao()">Cancelar</button>
                 <button type="button" class="btn btn-primary" @click="salvarMarca()">Salvar</button>
             </template>
         </modal-component>  
@@ -120,6 +117,39 @@
             </template>
         </modal-component>
 
+        <modal-component id="updateMarca" titulo="Editar marca">
+            <template v-slot:alertas v-if="this.$store.state.transacao.status">
+                <alert-component :tipo="alertTipo" :titulo="this.$store.state.transacao.status" :detalhes="this.$store.state.transacao.detalhes">
+                </alert-component>
+            </template>
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <input-container-component 
+                        id="inputAlterarNome" 
+                        label="Nome da Marca" 
+                        ajuda-id="ajudaAlterarNome" 
+                        ajuda-texto="Informe o nome da marca."
+                    >
+                        <input type="text" class="form-control" id="inputAlterarNome" aria-describedby="ajudaAlterarNome" v-model="$store.state.item.nome">
+                    </input-container-component>
+                    <br><img v-if="$store.state.item.imagem" id="marcaImagem" :src="'storage/'+$store.state.item.imagem" width="40%" height="40%"><br>
+                    <input-container-component 
+                        id="inputAlterarLogo" 
+                        label="Logo da Marca" 
+                        ajuda-id="ajudaAlterarLogo" 
+                        ajuda-texto="Anexe o logo da marca."
+                    >
+                    <input type="file" class="form-control-file" id="inputAlterarLogo" aria-describedby="ajudaAlterarLogo" @change="carregarImagem($event)">
+                    </input-container-component>
+                </div>
+                {{ this.$store.state.item }}
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="limparTransacao()">Cancelar</button>
+                <button type="button" class="btn btn-primary" @click="editarMarca()">Editar</button>
+            </template>
+        </modal-component> 
+
         <modal-component id="destroyMarca" titulo="Remover marca">
             <template v-slot:alertas v-if="this.$store.state.transacao.status">
                 <alert-component :tipo="alertTipo" :titulo="this.$store.state.transacao.status" :detalhes="this.$store.state.transacao.detalhes">
@@ -132,8 +162,8 @@
                 <input type="text" class="form-control" id="marcaNome" :value="$store.state.item.nome" disabled>
             </template>
             <template v-slot:rodape>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" @click="removerMarca">Remover</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="limparTransacao()">Cancelar</button>
+                <button type="button" class="btn btn-danger" @click="removerMarca()">Remover</button>
             </template>
         </modal-component>
         <!-- Fim Modais -->
@@ -214,12 +244,42 @@
                         }
                     })
             },
+            editarMarca(){
+                let url = this.urlBase + '/' + this.$store.state.item.id
+                let formData = new FormData()
+                formData.append('_method', 'patch')
+                formData.append('nome', this.$store.state.item.nome)
+                if(this.marcaLogo[0]){
+                    formData.append('imagem', this.marcaLogo[0])
+                }
+
+                axios.post(url, formData, this.config)
+                    .then(response => {
+                        this.alertTipo = 'success'
+                        this.$store.state.transacao.status = "Sucesso!"
+                        this.$store.state.transacao.detalhes = {
+                            mensagem: `Registro #${response.data.id} atualizado.`
+                        }
+                        inputAlterarLogo.value = ''
+                        this.carregarMarcas()
+                    })
+                    .catch(errors => {
+                        this.alertTipo = 'danger'
+                        this.$store.state.transacao = {
+                            status: "Erro ao atualizar a marca.",
+                            detalhes: { 
+                                mensagem: errors.message,
+                                erros: errors.response.data.errors
+                            }
+                        }
+                        console.log(errors)
+                    })
+            },
             carregarMarcas() {
                 let url = this.urlBase + '?' + this.paramPaginacao + this.paramFiltro
                 axios.get(url, this.config)
                     .then(response => {
                         this.marcas = response.data
-                        console.log(this.marcas)
                     })
                     .catch(errors => 
                         console.log(errors)
@@ -238,9 +298,8 @@
                         this.alertTipo = 'success'
                         this.$store.state.transacao.status = "Sucesso!"
                         this.$store.state.transacao.detalhes = {
-                            mensagem: `Registro excluído com sucesso: ${this.$store.state.item.id}`
+                            mensagem: `Registro #${this.$store.state.item.id} excluído com sucesso.`
                         }
-                        console.log(this.$store.state.transacao)
                         this.carregarMarcas()
                     })
                     .catch(errors => {
@@ -280,6 +339,11 @@
                     this.paramFiltro = ''
                 }
                 this.carregarMarcas()
+            },
+            limparTransacao(){
+                inputAlterarLogo.value=''
+                inputNovaLogo.value=''
+                this.$store.state.transacao = {status: '', detalhes: {mensagem: '', erros: ''}}
             }
         }
     }
