@@ -13,7 +13,7 @@
                         <img :src="'/storage/'+obj[chave]" height="20%" width="20%">
                     </span>
                     <span v-else-if="valor['tipo'] === 'timestamp'">
-                        {{ formatTimestamp(obj[chave]) }}
+                        {{ $filters.formatTimestampGlobal(obj[chave]) }}
                     </span>
                     <span v-else>
                         {{obj[chave]}}
@@ -48,17 +48,6 @@
 
         },
         methods: {
-            formatTimestamp(timestamp) {
-                const date = new Date(timestamp);
-                const formattedDate = date.toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                return formattedDate;
-            },
             setStore(item){
                 this.$store.state.item = item
                 this.$store.state.transacao = {status: '', detalhes: {mensagem: '', erros: ''}}

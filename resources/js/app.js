@@ -15,10 +15,8 @@ const store = createStore({
         teste: 'Esse é um teste',
         item: {},
         transacao: {status: '', detalhes: {mensagem: '', erros: ''}},
-    }
-    
-  })
-  
+    }    
+})
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -27,7 +25,24 @@ const store = createStore({
  */
 
 const app = createApp({});
+
 app.use(store)
+
+app.config.globalProperties.$filters = {
+    formatTimestampGlobal(timestamp) {
+        if(!timestamp) return ''
+        const date = new Date(timestamp);
+        const formattedDate = date.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        return formattedDate
+    }
+}
 
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
