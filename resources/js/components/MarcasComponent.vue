@@ -142,7 +142,6 @@
                     <input type="file" class="form-control-file" id="inputAlterarLogo" aria-describedby="ajudaAlterarLogo" @change="carregarImagem($event)">
                     </input-container-component>
                 </div>
-                {{ this.$store.state.item }}
             </template>
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="limparTransacao()">Cancelar</button>
@@ -227,10 +226,11 @@
                 axios.post(this.urlBase, formData, this.config)
                     .then(response => {
                         this.alertTipo = 'success'
-                        this.$store.state.transacao.status = "Sucesso! Marca criada."
+                        this.$store.state.transacao.status = "Sucesso!"
                         this.$store.state.transacao.detalhes = {
-                            mensagem: `ID do novo registro: ${response.data.id}`
+                            mensagem: `Marca ${response.data.nome} criada.`
                         }
+                        console.log(response)
                         this.carregarMarcas()
                     })
                     .catch(errors => {
@@ -261,6 +261,9 @@
                             mensagem: `Registro #${response.data.id} atualizado.`
                         }
                         inputAlterarLogo.value = ''
+                        this.$store.state.item.imagem=response.data.imagem
+                        console.log(response.data)
+                        
                         this.carregarMarcas()
                     })
                     .catch(errors => {
@@ -341,6 +344,7 @@
                 this.carregarMarcas()
             },
             limparTransacao(){
+                this.marcaNome=''
                 inputAlterarLogo.value=''
                 inputNovaLogo.value=''
                 this.$store.state.transacao = {status: '', detalhes: {mensagem: '', erros: ''}}

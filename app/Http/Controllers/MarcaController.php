@@ -54,7 +54,7 @@ class MarcaController extends Controller
             'nome'=>$request->nome,
             'imagem'=>$urn_imagem
         ]);
-        return $marca;
+        return response()->json($marca, 201);
     }
 
     /**
