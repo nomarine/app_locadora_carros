@@ -34,11 +34,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // });
 axios.interceptors.request.use(
     config => {
-        let cookie = document.cookie.split(';').find(indice => {
+        let token = document.cookie.split(';').find(indice => {
             return indice.includes('token=')
         })
-        cookie = cookie.split('=')
-        config.headers.Authorization = `Bearer ${cookie[1]}`
+        token = token.split('=')
+        config.headers.Authorization = `Bearer ${token[1]}`
         config.headers.Accept = 'application/json'
 
         console.log('request', config)
@@ -56,7 +56,20 @@ axios.interceptors.response.use(
         return response
     },
     error => {
-        console.log('response', error)
+        console.log('response', error.response)
+        if(error.response.status == 401 && error.response.data.message == 'Token has expired'){
+            console.log('let\'s do it!')
+            axios.post('http://127.0.0.1:8000/api/refresh')
+                .then(response => {
+                    console.log('cookie antigo', document.cookie)
+                    document.cookie = 'token='+response.data.token
+                    console.log('cookie novo', document.cookie)
+                    window.location.reload()
+                })
+                .catch(errors => {
+                    console.log(errors)
+                })
+        }
         return Promise.reject(error)
     }
 )  

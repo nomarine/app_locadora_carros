@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th scope="col" v-for="campo, key in campos" :key="key">{{campo.titulo}}</th>
-                <th v-if="actions">Ações</th>
+                <th v-if="actions" class="col-5">Ações</th>
             </tr>
         </thead>
         <tbody>
