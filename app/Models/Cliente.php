@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Cliente extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'nome'
+    ];
+
+    public function regras() {
+        return [
+            'nome' => 'required|min:2',
+        ];
+    }
+    
+    public function locacoes() {
+        return $this->belongsTo('App\Models\Locacao');
+    }
 }
