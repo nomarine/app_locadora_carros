@@ -72,7 +72,7 @@
         },
         methods: {
             login(e) {
-                let url = 'http://127.0.0.1:8000/api/login'
+                let url = 'http://127.0.0.1:8000/api/auth/login'
                 let configuracao = {
                     method: 'POST',
                     body: new URLSearchParams({
@@ -83,10 +83,11 @@
                 fetch(url, configuracao)
                     .then(response => response.json())
                     .then(data => {
-                        if(data.token){
-                            document.cookie = 'token='+data.token
+                        if(data.access_token){
+                            document.cookie = 'token='+data.access_token
                         }
                         e.target.submit()
+                        console.log(document.cookie.toString())
                     })
                     
             }
