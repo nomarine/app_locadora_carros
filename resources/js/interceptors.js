@@ -31,13 +31,16 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+function getCookie(titulo){
+    let token = document.cookie.split(';').find(cookie => cookie.includes(`${titulo}=`));
+    if (token) {
+        token = token.split('=')[1];
+        return token;
+    }
+}
+
 axios.interceptors.request.use(
     config => {
-        // let token = document.cookie.split(';').find(indice => {
-        //     return indice.includes('access_token=')
-        // })
-        // token = token.split('=')
-        // config.headers.Authorization = `Bearer ${token[1]}`
         let token = document.cookie.split(';').find(cookie => cookie.includes('access_token='));
         if (token) {
             token = token.split('=')[1];
@@ -59,7 +62,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => {
         console.log('response', response)
-
+        
         return response
     },
     error => {
@@ -68,9 +71,9 @@ axios.interceptors.response.use(
             console.log('let\'s do it!')
             axios.post(`${config.apiUrl}/auth/refresh`)
                 .then(response => {
-                    console.log('cookie antigo', document.access_token)
+                    console.log('cookie antigo', getCookie('access_token'))
                     document.cookie = 'access_token='+response.data.access_token
-                    console.log('cookie novo', document.access_token)
+                    console.log('cookie novo', getCookie('access_token'))
                     window.location.reload()
                 })
                 .catch(errors => {
