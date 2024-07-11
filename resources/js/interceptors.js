@@ -4,6 +4,7 @@
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+import config from './config';
 import axios from 'axios';
 window.axios = axios;
 
@@ -65,15 +66,15 @@ axios.interceptors.response.use(
         console.error('response', error.response)
         if(error.response.status == 401 && error.response.data.message == 'Token has expired'){
             console.log('let\'s do it!')
-            axios.post('http://127.0.0.1:8000/api/auth/refresh')
+            axios.post(`${config.apiUrl}/auth/refresh`)
                 .then(response => {
-                    console.log('cookie antigo', document.cookie)
-                    document.cookie = 'token='+response.data.access_token
-                    console.log('cookie novo', document.cookie)
+                    console.log('cookie antigo', document.access_token)
+                    document.cookie = 'access_token='+response.data.access_token
+                    console.log('cookie novo', document.access_token)
                     window.location.reload()
                 })
                 .catch(errors => {
-                    console.log(errors)
+                    console.log('erro refresh', errors)
                 })
         }
         return Promise.reject(error)
