@@ -45,8 +45,11 @@
                                         Entrar
                                     </button>
 
-                                    <a class="btn btn-link" href="#">
+                                    <a class="btn btn-link" href="#" @click="testeAxios">
                                         Esqueci a senha
+                                    </a>
+                                    <a class="btn btn-link" href="#" @click="getUser">
+                                        Esqueci a senha²
                                     </a>
 
                                 </div>
@@ -60,6 +63,9 @@
 </template>
 
 <script>
+    import config from '../config'
+    import axios from 'axios'
+
     export default {
         props: [
             'csrf_token'
@@ -70,26 +76,82 @@
                 password: ''
             }
         },
+        // created() {
+        //     Cookie.remove('access_token')
+        // },
         methods: {
+            testeAxios(){
+                let url = `http://127.0.0.1:8000/marcas`
+                axios.get(url)
+                   .then(response => {
+                    this.data = response.data
+                    window.location.href = '/marcas';
+                    console.log(this.data)
+                   })
+                   .catch(error => {
+                    this.error = "Error"
+                    console.error(error)
+                   })
+            },
             login(e) {
-                let url = 'http://127.0.0.1:8000/api/auth/login'
-                let configuracao = {
+                let url = `${config.apiUrl}/auth/login`
+                let formData = new URLSearchParams()
+                formData.append('email', this.email)
+                formData.append('password', this.password)
+
+                fetch(url, {
                     method: 'POST',
-                    body: new URLSearchParams({
-                        'email': this.email,
-                        'password': this.password
-                    })
-                }
-                fetch(url, configuracao)
-                    .then(response => response.json())
-                    .then(data => {
-                        if(data.access_token){
-                            document.cookie = 'token='+data.access_token
-                        }
-                        e.target.submit()
-                        console.log(document.cookie.toString())
-                    })
-                    
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.access_token) {
+                        document.cookie = 'access_token=' + data.access_token
+                    }
+                    e.target.submit()
+                    console.log("gerou token")
+                })
+                .catch(errors => {
+                    console.log('Error logging in', errors)
+                })
+                
+                // axios.post(url, formData, {
+                //     headers: {
+                //         'Content-Type': 'application/x-www-form-urlencoded',
+                //         'Accept': 'application/json'
+                //     }
+                // })
+                // .then(response => {
+                //     if(response.data.access_token){
+                //         document.cookie = 'access_token=' + response.data.access_token
+                //     }
+                //     e.target.submit()
+                //     console.log("gerou token")
+                // })
+                // .catch(errors => {
+                //     console.log('Error logging in', errors)
+                // })   
+            },
+            getUser() {
+                let url = `${config.apiUrl}/auth/me`
+                let formData = new URLSearchParams()
+                
+                axios.post(url, formData, {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(errors => {
+                    console.log('Error logging in', errors)
+                })   
             }
         }
     }
